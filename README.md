@@ -1,4 +1,4 @@
-# End to End project Global Electronics Retailer Analysis with Hadoop Ecosystem.
+# End to End project Global Electronics Retailer Analysis with Hadoop Ecosystem using 2-tier Architecture.
 
 _Table of contents_
 - [**1. Hadoop Ecosystem**](#1-hadoop-ecosystem)
@@ -6,9 +6,9 @@ _Table of contents_
   * [2.1. Conceptual Architecture base on Fabric](#21-conceptual-architecture-base-on-fabric)
   * [2.2. Physical Architecture](#22-physical-architecture)
 - [**3. Building End to End solutions**](#3-building-end-to-end-solutions)
-  * [3.1. Dataset](#31-dataset)
-  * [3.2. Orchestration (Data Catalog)](#32-orchestration-data-catalog)
-  * [3.3. Building Master Pipeline](#33-building-master-pipeline)
+  * [3.1. Dataset Diagram](#31-dataset)
+  * [3.2. Building HDFS](#32-building-hdfs)
+  * [3.3. Building Python Files for Pipeline](#33-building-python-files-for-pipeline)
 
 
 # **1. Hadoop Ecosystem**
@@ -42,6 +42,18 @@ Introduce some tools for project:
 
 - **Data Source** Layer: This layer is responsible for collecting and storing data from various sources, such as retail transaction data and customer data.
 
-- **Data Transformation** Layer: Initially, data from the Source will be loaded into the Bronze layer (Files in Lakehouse) and stored in parquet format through a Pipeline (Source_to_Bronze). The data will then be validated and transformed, and stored in Delta format in the Silver layer (Tables in Lakehouse). Similar to the Bronze layer, there will be a Pipeline responsible for this task (Bronze_to_Silver). After obtaining data from the Silver layer, we proceed to create Dim and Fact tables in the Gold layer and upload them to Power BI using Direct Lake connectivity.
+- **Data Transformation** Layer: Initially, data from the Source will be loaded into the Datalake layer (datalake in HDFS) and stored in parquet format through a reading data from MySQL by Apache Spark (Source_to_Datalake.py). Similar to the Datalae layer, there will be a Python Files responsible for transformation data from Datalake and then create Data Warehouse at Apache Hive (warehouse in HDFS)(Datalake_to_Datawarehouse.py).
 
 - **Reporting**: This layer is responsible for presenting data from the application layer to users in an understandable manner. This may include using web interfaces, mobile applications, or desktop applications.
+
+# **3. Building End to End solutions**
+
+## 3.1. Dataset Diagram
+![DataSetDiagram](https://github.com/thanhphat2609/Global_Electronics_Retailer_Hadoop/assets/84914537/e34766d2-8b75-4e32-8445-7bc4dcbd610e)
+
+
+## 3.2. Building HDFS
+![Mh6O-sC5](https://github.com/thanhphat2609/Global_Electronics_Retailer_Hadoop/assets/84914537/fd9d5eb2-a874-44bd-ab96-b1b7215835b5)
+
+
+## 3.3. Building Python Files for Pipeline
