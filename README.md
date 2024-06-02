@@ -14,6 +14,8 @@ _Table of contents_
 # **1. Hadoop Ecosystem**
 ![Hadoop_Ecosystem](https://github.com/thanhphat2609/Global_Electronics_Retailer_Hadoop/assets/84914537/2ca1841c-6829-4402-8363-4d2debfa0f06)
 
+Introduce some tools for project:
+
 - **Hadoop**: Hadoop is an open-source framework designed for distributed storage and processing of large datasets across clusters of computers using simple programming models. It provides a distributed file system (HDFS) and a framework for the processing of big data using the MapReduce programming model.
 
 - **HDFS** (Hadoop Distributed File System): HDFS is a distributed file system designed to store large volumes of data reliably and efficiently across multiple machines. It is the primary storage system used by Hadoop, providing high throughput access to application data.
