@@ -1,4 +1,4 @@
-![Hadoop_Ecosystem](https://github.com/thanhphat2609/Global_Electronics_Retailer_Hadoop/assets/84914537/7398363a-0732-4b5f-b412-3b46826da48e)# Global_Electronics_Retailer_Hadoop
+# End to End project Global Electronics Retailer Analysis with Hadoop Ecosystem.
 
 _Table of contents_
 - [**1. Hadoop Ecosystem**](#1-hadoop-ecosystem)
