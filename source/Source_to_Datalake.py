@@ -70,7 +70,6 @@ df_check_source = extraction.read_table_mysql(spark, driver, dbname, check_souce
 # Check read all table
 tblNames = ["customers", "sales", "products", "stores", "exchange_rates"]
 
-
 # # Read all table
 for tblName in tblNames:
     try:

@@ -1,4 +1,6 @@
-import os, subprocess
+import os
+import re
+import subprocess
 
 class HDFSUtils:
 
@@ -78,3 +80,46 @@ class HDFSUtils:
 
         return code
 
+
+    def get_new_version(self, executionDate, project, tblName):
+        """
+            Function Get new version of data
+
+            - Args:
+                executionDate, project, tblName
+
+            - Return
+                new_path_version
+        """
+
+        # Parse date
+        executionDate = executionDate.split("-")
+
+        # Partition data by Arguments
+        year = executionDate[0]
+        month = executionDate[1]
+        day = executionDate[2]
+
+
+        # Base path on HDFS
+        base_path = f'hdfs://localhost:9000/datalake/{project}/{tblName}/year={year}/month={month}/day={day}'
+
+        # Get all paths in HDFS
+        hdfs_paths = os.popen(f"hadoop fs -ls {base_path}").read()
+
+        # Define a regular expression pattern to match paths containing 'dfs' and 'parquet'
+        pattern = r'hdfs:\/\/.*?\/customers\/year=\d+\/month=\d+\/day=\d+\/customers_\d+_\d+_\d+-version_(\d+)\.parquet'
+
+        # Find all matches in the HDFS paths
+        matches = re.findall(pattern, hdfs_paths)
+
+        # Convert the version numbers to integers
+        versions = [int(match) for match in matches]
+
+        # Find the maximum version number and its index
+        new_version = max(versions)
+
+        # Get new path
+        new_path_version = f'hdfs://localhost:9000/datalake/{project}/{tblName}/year={year}/month={month}/day={day}/{tblName}_{year}_{month}_{day}-version_{new_version}.parquet'
+
+        return new_path_version
