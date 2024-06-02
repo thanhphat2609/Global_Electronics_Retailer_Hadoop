@@ -12,6 +12,13 @@ from modules.Extraction import *
 from modules.DataLog import *
 from modules.HDFSUtils import *
 
+# Create SparkSession
+spark = SparkSession.builder.appName("Mysql - to -  HDFS") \
+                            .config("spark.driver.memory", "40g") \
+                            .config("spark.executor.memory", "40g") \
+                            .config("spark.sql.parquet.vorder.enabled", "true") \
+                            .getOrCreate()
+
 # Receive argument
 executionDate = sys.argv[1]
 # Partition data by Arguments
@@ -20,12 +27,6 @@ year = parse_execution[0]
 month = parse_execution[1]
 day = parse_execution[2]
 
-# Create SparkSession
-spark = SparkSession.builder.appName("Mysql - to -  HDFS") \
-                            .config("spark.driver.memory", "40g") \
-                            .config("spark.executor.memory", "40g") \
-                            .config("spark.sql.parquet.vorder.enabled", "true") \
-                            .getOrCreate()
 
 # Define bath for saving data to hdfs
 log_path = "hdfs://localhost:9000/log/"
@@ -35,11 +36,11 @@ base_path = f"{hdfs_path}/{project}"
 
 # Instance of modules
 extraction = Extraction()
-check_hdfs = HDFSUtils()
+hdfsUtils = HDFSUtils()
 dataLogger = DataLog()
 
 # Define for log pipeline
-batch_run = check_hdfs.check_batch_run(executionDate)
+batch_run = hdfsUtils.check_batch_run(executionDate)
 start_time = ""
 end_time = ""
 error = ""
@@ -72,13 +73,10 @@ tblNames = ["customers", "sales", "products", "stores", "exchange_rates"]
 
 # # Read all table
 for tblName in tblNames:
+    # Start time for check
+    start_time = spark.sql(''' SELECT CURRENT_TIMESTAMP() as current_time ''') \
+                        .collect()[0]["current_time"].strftime('%Y-%m-%d %H:%M:%S')
     try:
-        
-        # Start time for check
-        start_time = spark.sql(''' SELECT CURRENT_TIMESTAMP() as current_time ''') \
-                            .collect()[0]["current_time"].strftime('%Y-%m-%d %H:%M:%S')
-    
-        
         # Read data
         df = extraction.read_table_mysql(spark, driver, dbname, tblName, username, password)
         
@@ -94,7 +92,7 @@ for tblName in tblNames:
         # df.show()
 
         # Write data to HDFS
-        code = check_hdfs.check_exist_data(executionDate, project, tblName)
+        code = hdfsUtils.check_exist_data(executionDate, project, tblName)
         # Exist file
         if code == 0: # Yes => Append for version data
             df.write.mode("append").format("parquet") \
@@ -102,10 +100,6 @@ for tblName in tblNames:
         else: # No => First run
             df.write.mode("overwrite").format("parquet") \
                     .save(f"{base_path}/{tblName}/year={year}/month={month}/day={day}/{tblName}_{year}_{month}_{day}-version_{batch_run}.parquet")
-            
-        # End time for check
-        end_time = spark.sql(''' SELECT CURRENT_TIMESTAMP() as current_time ''') \
-                            .collect()[0]["current_time"].strftime('%Y-%m-%d %H:%M:%S')
     
     except:
         error = traceback.format_exc()
@@ -114,6 +108,10 @@ for tblName in tblNames:
     else:
         error = ""
         status = "Success"
+    
+    # End time for check
+    end_time = spark.sql(''' SELECT CURRENT_TIMESTAMP() as current_time ''') \
+                        .collect()[0]["current_time"].strftime('%Y-%m-%d %H:%M:%S')
 
     # Check status
     # print("Tablename: ", tblName, "Error: ", error, "Status: ", status, 

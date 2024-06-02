@@ -9,9 +9,9 @@ class Extraction:
             Function for create year, month, day
 
             - Args:
-                df
-                executionDate
-                f
+                df: Dataframe
+                executionDate: Execution Date
+                f: pyspark.sql.functions
             
             - Returns:
                 df with year, month, day column
@@ -35,7 +35,12 @@ class Extraction:
         
         
             - Args:
-                spark, driver, dbName, tbName, username, password
+                spark: SparkSession.
+                driver: Driver connection to MySQL. 
+                dbName: Database name from MySQL.
+                tbName: Table name from MySQL.
+                username: Username of account to login MySQL.
+                password: Password.
             
             - Return:
                 df: Dataframe
@@ -59,7 +64,12 @@ class Extraction:
         
         
             - Args:
-                spark, driver, dbName, tbName, username, password
+                spark: SparkSession.
+                driver: Driver connection to MySQL.
+                dbName: Database from MySQL.
+                tbName: Table name from MySQL.
+                username: Username of account.
+                password: Password of account.
             
             - Return:
                 df: Dataframe

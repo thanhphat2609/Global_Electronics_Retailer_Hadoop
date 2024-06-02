@@ -9,6 +9,16 @@ class HDFSUtils:
 
     # Function check batch_run
     def check_batch_run(self, executionDate):
+        """
+            Check batch_run of the day
+
+            - Args:
+                executionDate: Execution Date
+
+            - Return
+                Code of the command line
+        """
+
         # Initial value
         batch_run = 1
         hdfs_paths = None
@@ -61,7 +71,9 @@ class HDFSUtils:
             Function check_exist_data
 
             - Args:
-                executionDate, project, tblName
+                executionDate: Execution Date.
+                project: Name of the project.
+                tablename: Name for table of path.
 
             - Return
                 Code 0: Exist file, 1: Not exist file
@@ -81,15 +93,17 @@ class HDFSUtils:
         return code
 
 
-    def get_new_version(self, executionDate, project, tblName):
+    def get_new_version(self, executionDate, project, tablename):
         """
-            Function Get new version of data
+        Function Get new version of data
 
-            - Args:
-                executionDate, project, tblName
+        - Args:
+            executionDate: Execution Date.
+            project: Name of the project.
+            tablename: Name for table of path.
 
-            - Return
-                new_path_version
+        - Return
+            new_path_version
         """
 
         # Parse date
@@ -100,15 +114,14 @@ class HDFSUtils:
         month = executionDate[1]
         day = executionDate[2]
 
-
         # Base path on HDFS
-        base_path = f'hdfs://localhost:9000/datalake/{project}/{tblName}/year={year}/month={month}/day={day}'
+        base_path = f'hdfs://localhost:9000/datalake/{project}/{tablename}/year={year}/month={month}/day={day}'
 
         # Get all paths in HDFS
         hdfs_paths = os.popen(f"hadoop fs -ls {base_path}").read()
 
         # Define a regular expression pattern to match paths containing 'dfs' and 'parquet'
-        pattern = r'hdfs:\/\/.*?\/customers\/year=\d+\/month=\d+\/day=\d+\/customers_\d+_\d+_\d+-version_(\d+)\.parquet'
+        pattern = r'hdfs:\/\/.*?\/{0}\/year=\d+\/month=\d+\/day=\d+\/{0}_\d+_\d+_\d+-version_(\d+)\.parquet'.format(re.escape(tablename))
 
         # Find all matches in the HDFS paths
         matches = re.findall(pattern, hdfs_paths)
@@ -120,6 +133,7 @@ class HDFSUtils:
         new_version = max(versions)
 
         # Get new path
-        new_path_version = f'hdfs://localhost:9000/datalake/{project}/{tblName}/year={year}/month={month}/day={day}/{tblName}_{year}_{month}_{day}-version_{new_version}.parquet'
+        new_path_version = f'hdfs://localhost:9000/datalake/{project}/{tablename}/year={year}/month={month}/day={day}/{tablename}_{year}_{month}_{day}-version_{new_version}.parquet'
 
+        
         return new_path_version
