@@ -1,0 +1,13 @@
+-- Set local_infile = true for load local file to database in MySQL
+set global local_infile=true;
+
+-- check 
+show global variables like 'local_infile';
+
+-- start by local
+ mysql --local-infile=1 -u root -p
+
+-- Insert data
+USE Global_Electronics_Retailer;
+
+LOAD DATA LOCAL INFILE '/home/thanhphat/PersonalProject/Global_Electronics_Retailer/dataset/customers.csv' INTO TABLE customers IGNORE 1 LINES;
