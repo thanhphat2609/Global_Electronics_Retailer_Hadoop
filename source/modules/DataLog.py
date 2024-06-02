@@ -9,9 +9,10 @@ class DataLog:
         Log the pipeline data.
 
         Args:
-        - batch: The batch of the pipeline.
-        -
+        - batchid: The batch of the pipeline.
         - pipelinejob: The task name.
+        - dbname: Source Database.
+        - table_name: Source table
         - start_time: The start time of the task.
         - end_time: The end time of the task.
         - src_rows_read: Number of source rows read.
