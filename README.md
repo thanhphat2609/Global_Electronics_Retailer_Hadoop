@@ -38,6 +38,7 @@ Introduce some tools for project:
 - **Analytics**: This last step we will use tools and techniques to analyze the data in the data warehouse, such as: Power BI, Tableau, ..
 
 ## 2.2. Physical Architecture
+![f2421eb3-7efc-422c-b0de-926effb11f81](https://github.com/thanhphat2609/Global_Electronics_Retailer_Hadoop/assets/84914537/7d362cdf-e7d3-490a-8602-1c9d467c8bb1)
 
 
 - **Data Source** Layer: This layer is responsible for collecting and storing data from various sources, such as retail transaction data and customer data.
