@@ -38,8 +38,7 @@ Introduce some tools for project:
 - **Analytics**: This last step we will use tools and techniques to analyze the data in the data warehouse, such as: Power BI, Tableau, ..
 
 ## 2.2. Physical Architecture
-![Hadoop_Architecture-Overall_Architecture drawio](https://github.com/thanhphat2609/Global_Electronics_Retailer_Hadoop/assets/84914537/d635a307-01f5-4877-aedd-3df2aad9ecdf)
-
+![image](https://github.com/thanhphat2609/Global_Electronics_Retailer_Hadoop/assets/84914537/6ef80acd-6c89-4567-bff2-57c05715fe29)
 
 
 
