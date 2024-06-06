@@ -8,7 +8,13 @@ _Table of contents_
 - [**3. Building End to End solutions**](#3-building-end-to-end-solutions)
   * [3.1. Dataset Diagram](#31-dataset)
   * [3.2. Building HDFS](#32-building-hdfs)
-  * [3.3. Building Python Files for Pipeline](#33-building-python-files-for-pipeline)
+  * [3.3. Building Orchestration](#33-building-orchestration)
+- [**4. Result**](#4-result)
+  * [4.1. Pipeline](#41-pipeline)
+  * [4.2. Datalake](#41-datalake)
+  * [4.3. Data Warehouse](#41-data-warehouse)
+  * [4.4. Log Data](#41-log_data)
+  * [4.5. Superset Report](#41-superset-report)
 
 
 # **1. Hadoop Ecosystem**
@@ -58,4 +64,19 @@ Introduce some tools for project:
 ![Mh6O-sC5](https://github.com/thanhphat2609/Global_Electronics_Retailer_Hadoop/assets/84914537/fd9d5eb2-a874-44bd-ab96-b1b7215835b5)
 
 
-## 3.3. Building Python Files for Pipeline
+## 3.3. Building Orchestration
+
+- **Pipeline in Airflow**
+![image](https://github.com/thanhphat2609/Global_Electronics_Retailer_Hadoop/assets/84914537/ba003cae-d560-4e8d-aece-23268859a70a)
+
+# **4. Result**
+
+## 4.1. Pipeline
+
+## 4.2. Datalake
+
+## 4.3. Data Warehouse
+
+## 4.4. Log Data
+
+## 4.5. Superset Report
