@@ -70,15 +70,17 @@ Introduce some tools for project:
 ![image](https://github.com/thanhphat2609/Global_Electronics_Retailer_Hadoop/assets/84914537/ba003cae-d560-4e8d-aece-23268859a70a)
 
 - **Python files for Run Spark App**
+
 | **Python Files**          | **Meaning** |
 |-------------------|-------------- |
-||  |
+| |  |
 
 
 - **Modules define by Python**
+
 | **Python Files**          | **Meaning** |
 |-------------------|-------------- |
-||  |
+| |  |
 
 
 
