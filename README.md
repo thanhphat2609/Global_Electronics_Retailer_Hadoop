@@ -11,10 +11,10 @@ _Table of contents_
   * [3.3. Building Orchestration](#33-building-orchestration)
 - [**4. Result**](#4-result)
   * [4.1. Pipeline](#41-pipeline)
-  * [4.2. Datalake](#41-datalake)
-  * [4.3. Data Warehouse](#41-data-warehouse)
-  * [4.4. Log Data](#41-log_data)
-  * [4.5. Superset Report](#41-superset-report)
+  * [4.2. Datalake](#42-datalake)
+  * [4.3. Data Warehouse](#43-data-warehouse)
+  * [4.4. Log Data](#44-log_data)
+  * [4.5. Superset Report](#45-superset-report)
 
 
 # **1. Hadoop Ecosystem**
