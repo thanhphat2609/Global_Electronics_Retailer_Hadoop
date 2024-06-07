@@ -67,7 +67,8 @@ Introduce some tools for project:
 ## 3.3. Building Orchestration
 
 - **Pipeline in Airflow**
-![image](https://github.com/thanhphat2609/Global_Electronics_Retailer_Hadoop/assets/84914537/ba003cae-d560-4e8d-aece-23268859a70a)
+![image](https://github.com/thanhphat2609/Global_Electronics_Retailer_Hadoop/assets/84914537/34539cdc-6a22-4c18-ab98-853a473a5765)
+
 
 - **Python files for Run Spark App**
 
