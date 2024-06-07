@@ -47,7 +47,7 @@ class Load:
 
 
     # Function for save df to hive table
-    def save_hive_table(self, df, table_name):
+    def save_hive_table(self, df, db_hive_name, table_name):
         """
             Function for save dataframe as Hive Table (Just for inital)
 
@@ -59,7 +59,8 @@ class Load:
                 None
         
         """
-        df.write.mode('overwrite').saveAsTable(f"{table_name}")
+        df.write.partitionBy("year", "month", "day").mode('overwrite') \
+                .saveAsTable(f"{db_hive_name}.{table_name}")
 
 
 

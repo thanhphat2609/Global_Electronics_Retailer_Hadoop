@@ -1,17 +1,15 @@
 # Lib for read Argument from execute pipeline
 from pyspark.sql import SparkSession
 
-
 # Import modules
 from modules.Extraction import *
+from modules.Load import *
+from modules.Transformation import *
 from modules.DataLog import *
 from modules.HDFSUtils import *
-from modules.Load import *
 from modules.Validate import *
 
-
 import traceback
-import sys
 import great_expectations as gx
 import pyspark.sql.functions as f
 import pyspark.sql.types as t
@@ -22,15 +20,13 @@ spark = SparkSession.builder.appName("Load to Hive") \
                             .config("spark.sql.warehouse.dir", "hdfs://localhost:9000/warehouse").enableHiveSupport() \
                             .config("hive.exec.dynamic.partition", "true") \
 	                        .config("hive.exec.dynamic.partition.mode", "nonstrict") \
-                            .config("spark.driver.memory", "40g") \
-                            .config("spark.executor.memory", "40g") \
                             .config("spark.sql.parquet.vorder.enabled", "true") \
                             .getOrCreate()
-
 
 # Instance of modules
 loadHive = Load()
 extraction = Extraction()
+transformatiom = Transformation()
 hdfsUtils = HDFSUtils()
 dataLogger = DataLog()
 validateData = ValidateData()
@@ -40,7 +36,7 @@ context = gx.get_context()
 
 
 # Receive argument
-executionDate = sys.argv[1]
+executionDate = spark.sql("SELECT CURRENT_DATE() as current_date_run").collect()[0][0]
 # Partition data by Arguments
 parse_execution = executionDate.split("-")
 year = parse_execution[0]
@@ -69,6 +65,10 @@ numUpdated = 0
 columnNull = ""
 columnMissing = ""
 
+# Column check
+col_check_match = None
+col_check_null = ""
+
 
 # # Create new database
 # loadHive.create_db_hive(spark, dbHiveName)
@@ -91,7 +91,8 @@ for tblName in tblNames:
             # Task = 6, Customer
         if tblName == "customers":
             col_check_match = ["CustomerKey", "Gender", "Name", "City", "State_Code", 
-                               "State", "Zip_Code", "Country", "Continent", "Birthday"]
+                               "State", "Zip_Code", "Country", "Continent", "Birthday",
+                               "year", "month", "day"]
             col_check_null = "CustomerKey"
 
             columnMissing = validateData.check_schema(validator, col_check_match)
@@ -99,7 +100,8 @@ for tblName in tblNames:
         
             # Task = 7, Stores
         elif tblName == "stores":
-            col_check_match = ["StoreKey", "Country", "State", "Square_Meters", "Open_Date"]
+            col_check_match = ["StoreKey", "Country", "State", "Square_Meters", "Open_Date",
+                               "year", "month", "day"]
             col_check_null = "StoreKey"
 
             columnMissing = validateData.check_schema(validator, col_check_match)
@@ -109,7 +111,8 @@ for tblName in tblNames:
         elif tblName == "products":
             col_check_match = ["ProductKey", "Product_Name", "Brand", "Color", 
                                "Unit_Cost_USD", "Unit_Price_USD", \
-                               "SubcategoryKey", "Subcategory", "CategoryKey", "Category"]
+                               "SubcategoryKey", "Subcategory", "CategoryKey", "Category",
+                               "year", "month", "day"]
             col_check_null = "ProductKey"
 
             columnMissing = validateData.check_schema(validator, col_check_match)
@@ -119,7 +122,8 @@ for tblName in tblNames:
         elif tblName == "sales":
             col_check_match = ["Order_Number", "Line_Item", "Order_Date", "Delivery_Date", 
                                "CustomerKey", "StoreKey",
-                               "ProductKey", "Quantity", "Currency_Code"]
+                               "ProductKey", "Quantity", "Currency_Code",
+                               "year", "month", "day"]
             col_check_null = "Order_Number"
 
             columnMissing = validateData.check_schema(validator, col_check_match)
@@ -127,7 +131,8 @@ for tblName in tblNames:
             
             # Task = 10, Exchange_Rates
         elif tblName == "exchange_rates":
-            col_check_match = ["Date", "Currency", "Exchange"]
+            col_check_match = ["Date", "Currency", "Exchange", 
+                               "year", "month", "day"]
             col_check_null = "Currency"
 
             columnMissing = validateData.check_schema(validator, col_check_match)
@@ -139,7 +144,7 @@ for tblName in tblNames:
         # Check error 
         if (columnMissing != "") or (columnNull != ""): 
             error = "Missing column or Have null value in data"
-            status = "Failed"
+            status = "Failed by Missed column or Have null KEY value"
         else:
 
             error = ""
@@ -154,6 +159,32 @@ for tblName in tblNames:
             source_row_read = df.count()
 
             # Check exist table and update or insert or overwrite
+            check_table_exists = loadHive.check_exist_table(spark, dbHiveName, tblName)
+            if check_table_exists == 0: # Not exist
+                if tblName != "sales":
+                    dim_table = f"dim_{tblName}"
+                    loadHive.save_hive_table(df, dbHiveName, dim_table)                    
+
+                else:
+                    fact_table = f"fact_{tblName}"
+                    loadHive.save_hive_table(df, dbHiveName, fact_table)
+                
+                numInserted = df.count()
+
+            # Check upsert data
+            else: # Exists
+                if tblName != "sales":
+                    dim_table = f"dim_{tblName}"
+                    transformatiom.merge(spark, df, dbHiveName, dim_table) 
+                                     
+
+                else:
+                    fact_table = f"fact_{tblName}"
+                    transformatiom.merge(spark, df, dbHiveName, fact_table)
+
+
+                numInserted = transformatiom.get_insert_count()
+                numUpdated = transformatiom.get_update_count()  
     
     except:
         error = traceback.format_exc()
@@ -164,3 +195,10 @@ for tblName in tblNames:
     # End time for check
     end_time = spark.sql(''' SELECT CURRENT_TIMESTAMP() as current_time ''') \
                         .collect()[0]["current_time"].strftime('%Y-%m-%d %H:%M:%S')
+    
+    df_log = dataLogger.log_data(batch_id, pipeline_job, dbHiveName, tblName,
+                 start_time, end_time, source_row_read, numInserted, numUpdated, columnMissing, 
+                 columnNull, error, status, t, spark)
+
+    df_log.write.mode("append").format("parquet").save(f"{log_path}/{project}/{executionDate}/batch_{batch_id}/")
+

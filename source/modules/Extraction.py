@@ -25,7 +25,9 @@ class Extraction:
         day = executionDate[2]
 
         # Create new column for partition
-        df = df.withColumn("year", f.lit(year)).withColumn("month", f.lit(month)).withColumn("day", f.lit(day))
+        df = df.withColumn("year", f.lit(year)) \
+               .withColumn("month", f.lit(month)) \
+               .withColumn("day", f.lit(day))
         return df
 
     # Function for read table in MySQL into dataframe

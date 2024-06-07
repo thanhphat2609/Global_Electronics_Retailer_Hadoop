@@ -1,6 +1,4 @@
 # Lib for read Argument from execute pipeline
-import sys
-
 from pyspark.sql import SparkSession
 import pyspark.sql.functions as f
 import pyspark.sql.types as t
@@ -12,15 +10,19 @@ from modules.Extraction import *
 from modules.DataLog import *
 from modules.HDFSUtils import *
 
+driver_path = "/home/thanhphat/PersonalProject/Global_Electronics_Retailer/driver/mysql-connector-j-8.1.0.jar"
+
+
 # Create SparkSession
-spark = SparkSession.builder.appName("Mysql - to -  HDFS") \
-                            .config("spark.driver.memory", "40g") \
-                            .config("spark.executor.memory", "40g") \
+spark = SparkSession.builder.appName("Mysql - to -  HDFS").master("local[5") \
                             .config("spark.sql.parquet.vorder.enabled", "true") \
+                            .config("spark.sql.shuffle.partitions", 100) \
                             .getOrCreate()
 
 # Receive argument
-executionDate = sys.argv[1]
+executionDate = str(spark.sql("SELECT CURRENT_DATE() as current_date_run").collect()[0][0])
+# executionDate = "2024-04-30"
+
 # Partition data by Arguments
 parse_execution = executionDate.split("-")
 year = parse_execution[0]
