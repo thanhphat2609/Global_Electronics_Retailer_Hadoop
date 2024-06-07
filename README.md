@@ -6,7 +6,7 @@ _Table of contents_
   * [2.1. Conceptual Architecture base on Fabric](#21-conceptual-architecture-base-on-fabric)
   * [2.2. Physical Architecture](#22-physical-architecture)
 - [**3. Building End to End solutions**](#3-building-end-to-end-solutions)
-  * [3.1. Dataset Diagram](#31-dataset)
+  * [3.1. Dataset Diagram](#31-dataset-diagram)
   * [3.2. Building HDFS](#32-building-hdfs)
   * [3.3. Building Orchestration](#33-building-orchestration)
 - [**4. Result**](#4-result)
@@ -65,6 +65,10 @@ Introduce some tools for project:
 
 
 ## 3.3. Building Orchestration
+
+- **Config for run SparkApp on Airflow**
+![image](https://github.com/thanhphat2609/Global_Electronics_Retailer_Hadoop/assets/84914537/5d4df9b9-fd08-4b12-8ddf-0a99c7918661)
+
 
 - **Pipeline in Airflow**
 ![image](https://github.com/thanhphat2609/Global_Electronics_Retailer_Hadoop/assets/84914537/34539cdc-6a22-4c18-ab98-853a473a5765)
