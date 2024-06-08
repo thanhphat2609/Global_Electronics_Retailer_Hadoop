@@ -67,6 +67,9 @@ Introduce some tools for project:
 - **Config for run SparkApp on Airflow**
 ![image](https://github.com/thanhphat2609/Global_Electronics_Retailer_Hadoop/assets/84914537/5d4df9b9-fd08-4b12-8ddf-0a99c7918661)
 
+- **Config connection to MySQL on Airflow**
+![image](https://github.com/thanhphat2609/Global_Electronics_Retailer_Hadoop/assets/84914537/1decc5a5-dc05-4fa8-a6b8-ce2deca98aa8)
+
 
 - **Pipeline in Airflow**
 ![image](https://github.com/thanhphat2609/Global_Electronics_Retailer_Hadoop/assets/84914537/34539cdc-6a22-4c18-ab98-853a473a5765)
