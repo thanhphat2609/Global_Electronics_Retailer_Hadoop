@@ -72,7 +72,7 @@ Introduce some tools for project:
 
 
 - **Pipeline in Airflow**
-![image](https://github.com/thanhphat2609/Global_Electronics_Retailer_Hadoop/assets/84914537/293e0358-6033-44f3-8f5b-1a100f08af62)
+![image](https://github.com/thanhphat2609/Global_Electronics_Retailer_Hadoop/assets/84914537/f73556f9-c5b4-42f8-a6e0-8e4a78ef2ac6)
 
 
 - **Python files for Run Spark App**
@@ -101,6 +101,7 @@ Introduce some tools for project:
 # **4. Result**
 
 ## 4.1. Pipeline
+![image](https://github.com/thanhphat2609/Global_Electronics_Retailer_Hadoop/assets/84914537/293e0358-6033-44f3-8f5b-1a100f08af62)
 
 ## 4.2. Datalake
 
