@@ -7,14 +7,14 @@ import traceback
 
 # Import modules
 from modules.Extraction import *
-from modules.DataLog import *
+from modules.LogUtils import *
 from modules.HDFSUtils import *
 
 driver_path = "/home/thanhphat/PersonalProject/Global_Electronics_Retailer/driver/mysql-connector-j-8.1.0.jar"
 
 
 # Create SparkSession
-spark = SparkSession.builder.appName("Mysql - to -  HDFS").master("local[5") \
+spark = SparkSession.builder.appName("Mysql - to -  HDFS") \
                             .config("spark.sql.parquet.vorder.enabled", "true") \
                             .config("spark.sql.shuffle.partitions", 100) \
                             .getOrCreate()
@@ -39,7 +39,7 @@ base_path = f"{hdfs_path}/{project}"
 # Instance of modules
 extraction = Extraction()
 hdfsUtils = HDFSUtils()
-dataLogger = DataLog()
+dataLogger = LogUtils()
 
 # Define for log pipeline
 batch_run = hdfsUtils.check_batch_run(executionDate)

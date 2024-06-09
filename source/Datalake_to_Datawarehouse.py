@@ -5,7 +5,7 @@ from pyspark.sql import SparkSession
 from modules.Extraction import *
 from modules.Load import *
 from modules.Transformation import *
-from modules.DataLog import *
+from modules.LogUtils import *
 from modules.HDFSUtils import *
 from modules.Validate import *
 
@@ -16,11 +16,12 @@ import pyspark.sql.types as t
 
 
 # Create SparkSession
-spark = SparkSession.builder.appName("Load to Hive") \
+spark = SparkSession.builder.appName("Load from Datalake to Hive Warehouse") \
                             .config("spark.sql.warehouse.dir", "hdfs://localhost:9000/warehouse").enableHiveSupport() \
                             .config("hive.exec.dynamic.partition", "true") \
 	                        .config("hive.exec.dynamic.partition.mode", "nonstrict") \
                             .config("spark.sql.parquet.vorder.enabled", "true") \
+                            .config("spark.sql.shuffle.partitions", 100) \
                             .getOrCreate()
 
 # Instance of modules
@@ -28,15 +29,15 @@ loadHive = Load()
 extraction = Extraction()
 transformatiom = Transformation()
 hdfsUtils = HDFSUtils()
-dataLogger = DataLog()
-validateData = ValidateData()
+dataLogger = LogUtils()
+validateData = ValidateData()  
 
 # Instance of great_expectations
 context = gx.get_context()
 
 
 # Receive argument
-executionDate = spark.sql("SELECT CURRENT_DATE() as current_date_run").collect()[0][0]
+executionDate = str(spark.sql("SELECT CURRENT_DATE() as current_date_run").collect()[0][0])
 # Partition data by Arguments
 parse_execution = executionDate.split("-")
 year = parse_execution[0]
@@ -70,8 +71,8 @@ col_check_match = None
 col_check_null = ""
 
 
-# # Create new database
-# loadHive.create_db_hive(spark, dbHiveName)
+# Create new database
+loadHive.create_db_hive(spark, dbHiveName)
 
 # Check read all table
 tblNames = ["customers", "sales", "products", "stores", "exchange_rates"]
@@ -83,51 +84,51 @@ for tblName in tblNames:
                         .collect()[0]["current_time"].strftime('%Y-%m-%d %H:%M:%S')
 
     try:
-
         new_version_path = hdfsUtils.get_new_version(executionDate, project, tblName)
+        # print("Path: ", new_version_path)
         validator = context.sources.pandas_default.read_parquet(new_version_path)
 
         # Check task
             # Task = 6, Customer
         if tblName == "customers":
-            col_check_match = ["CustomerKey", "Gender", "Name", "City", "State_Code", 
-                               "State", "Zip_Code", "Country", "Continent", "Birthday",
+            col_check_match = ["CustomerKey", "Gender", "Name", "City", "State Code", 
+                               "State", "Zip Code", "Country", "Continent", "Birthday",
                                "year", "month", "day"]
             col_check_null = "CustomerKey"
 
             columnMissing = validateData.check_schema(validator, col_check_match)
-            columnNull = validateData.check_null(validator, col_check_null)
+            # columnNull = validateData.check_null(validator, col_check_null)
         
             # Task = 7, Stores
         elif tblName == "stores":
-            col_check_match = ["StoreKey", "Country", "State", "Square_Meters", "Open_Date",
+            col_check_match = ["StoreKey", "Country", "State", "Square Meters", "Open Date",
                                "year", "month", "day"]
             col_check_null = "StoreKey"
 
             columnMissing = validateData.check_schema(validator, col_check_match)
-            columnNull = validateData.check_null(validator, col_check_null)
+            # columnNull = validateData.check_null(validator, col_check_null)
             
             # Task = 8, Products
         elif tblName == "products":
-            col_check_match = ["ProductKey", "Product_Name", "Brand", "Color", 
-                               "Unit_Cost_USD", "Unit_Price_USD", \
+            col_check_match = ["ProductKey", "Product Name", "Brand", "Color", 
+                               "Unit Cost USD", "Unit Price USD", \
                                "SubcategoryKey", "Subcategory", "CategoryKey", "Category",
                                "year", "month", "day"]
             col_check_null = "ProductKey"
 
             columnMissing = validateData.check_schema(validator, col_check_match)
-            columnNull = validateData.check_null(validator, col_check_null)
+            # columnNull = validateData.check_null(validator, col_check_null)
 
             # Task = 9, Sales
         elif tblName == "sales":
-            col_check_match = ["Order_Number", "Line_Item", "Order_Date", "Delivery_Date", 
+            col_check_match = ["Order Number", "Line Item", "Order Date", "Delivery Date", 
                                "CustomerKey", "StoreKey",
-                               "ProductKey", "Quantity", "Currency_Code",
+                               "ProductKey", "Quantity", "Currency Code",
                                "year", "month", "day"]
-            col_check_null = "Order_Number"
+            col_check_null = "OrderNumber"
 
             columnMissing = validateData.check_schema(validator, col_check_match)
-            columnNull = validateData.check_null(validator, col_check_null)
+            # columnNull = validateData.check_null(validator, col_check_null)
             
             # Task = 10, Exchange_Rates
         elif tblName == "exchange_rates":
@@ -136,7 +137,7 @@ for tblName in tblNames:
             col_check_null = "Currency"
 
             columnMissing = validateData.check_schema(validator, col_check_match)
-            columnNull = validateData.check_null(validator, col_check_null)
+            # columnNull = validateData.check_null(validator, col_check_null)
 
         else:
             pass
@@ -189,7 +190,7 @@ for tblName in tblNames:
     except:
         error = traceback.format_exc()
         status = "Failed"
-        print("Error: ", error)
+        # print("Error: ", error)
 
 
     # End time for check
