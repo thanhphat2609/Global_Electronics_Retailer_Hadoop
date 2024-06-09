@@ -60,7 +60,10 @@ class Transformation:
         self.numInserted = df_insert.count()
         
         # Insert new data
-        df_insert.write.mode("append").saveAsTable(f"{db_hive_name}.{tblName}")
+        if tblName != "fact_sales":
+            df_insert.write.partitionBy("year", "month", "day").mode("append").saveAsTable(f"{db_hive_name}.{tblName}")
+        else:
+            df_insert.write.partitionBy("OrderDate").mode("append").saveAsTable(f"{db_hive_name}.{tblName}")
 
         # Check update
         df_update = self.check_update(df_old, df_new)

@@ -19,9 +19,16 @@ class Load:
                     0: Not
                     1: Yes
         """
+        # Get dim, fact table
+        if tablename != "sales":
+            tblName = f"dim_{tablename}"
+        else:
+            tblName = f"fact_{tablename}"
+
+
         try:
-            df = spark.sql(f""" SELECT COUNT(*) FROM {dbName}.{tablename};""")
-            df.show()
+            df = spark.sql(f""" SELECT COUNT(*) FROM {dbName}.{tblName};""")
+            # df.show()
         except:
             check_exist = 0 # Not Exist
         else:

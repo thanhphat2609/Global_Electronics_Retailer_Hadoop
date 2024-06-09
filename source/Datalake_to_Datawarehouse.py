@@ -79,6 +79,9 @@ tblNames = ["customers", "sales", "products", "stores", "exchange_rates"]
 
 for tblName in tblNames:
 
+    # Null df
+    df = None
+
     # Start time for check
     start_time = spark.sql(''' SELECT CURRENT_TIMESTAMP() as current_time ''') \
                         .collect()[0]["current_time"].strftime('%Y-%m-%d %H:%M:%S')
@@ -97,7 +100,13 @@ for tblName in tblNames:
             col_check_null = "CustomerKey"
 
             columnMissing = validateData.check_schema(validator, col_check_match)
-            # columnNull = validateData.check_null(validator, col_check_null)
+            columnNull = validateData.check_null(validator, col_check_null)
+
+            df = spark.read.format("parquet").load(new_version_path)
+
+            # Transformation
+            df = df.withColumnRenamed("State Code", "StateCode") \
+                   .withColumnRenamed("Zip Code", "ZipCode")
         
             # Task = 7, Stores
         elif tblName == "stores":
@@ -106,7 +115,12 @@ for tblName in tblNames:
             col_check_null = "StoreKey"
 
             columnMissing = validateData.check_schema(validator, col_check_match)
-            # columnNull = validateData.check_null(validator, col_check_null)
+            columnNull = validateData.check_null(validator, col_check_null)
+
+            df = spark.read.format("parquet").load(new_version_path)
+
+            df = df.withColumnRenamed("Square Meters", "SquareMeters") \
+                   .withColumnRenamed("Open Date", "OpenDate")
             
             # Task = 8, Products
         elif tblName == "products":
@@ -117,18 +131,35 @@ for tblName in tblNames:
             col_check_null = "ProductKey"
 
             columnMissing = validateData.check_schema(validator, col_check_match)
-            # columnNull = validateData.check_null(validator, col_check_null)
+            columnNull = validateData.check_null(validator, col_check_null)
 
+
+            df = spark.read.format("parquet").load(new_version_path)
+
+            df = df.withColumnRenamed("Product Name", "ProductName") \
+                   .withColumnRenamed("Unit Cost USD", "Unit_Cost_USD") \
+                   .withColumnRenamed("Unit Price USD", "Unit_Price_USD")
+            
             # Task = 9, Sales
         elif tblName == "sales":
             col_check_match = ["Order Number", "Line Item", "Order Date", "Delivery Date", 
                                "CustomerKey", "StoreKey",
                                "ProductKey", "Quantity", "Currency Code",
                                "year", "month", "day"]
-            col_check_null = "OrderNumber"
+            col_check_null = "Order Number"
 
             columnMissing = validateData.check_schema(validator, col_check_match)
-            # columnNull = validateData.check_null(validator, col_check_null)
+            columnNull = validateData.check_null(validator, col_check_null)
+
+            df = spark.read.format("parquet").load(new_version_path)
+
+            # df.show().limit(1)
+
+            df = df.withColumnRenamed("Order Number", "OrderNumber") \
+                   .withColumnRenamed("Line Item", "LineItem") \
+                   .withColumnRenamed("Order Date", "OrderDate") \
+                   .withColumnRenamed("Delivery Date", "DeliveryDate") \
+                   .withColumnRenamed("Currency Code", "CurrencyCode")
             
             # Task = 10, Exchange_Rates
         elif tblName == "exchange_rates":
@@ -137,7 +168,9 @@ for tblName in tblNames:
             col_check_null = "Currency"
 
             columnMissing = validateData.check_schema(validator, col_check_match)
-            # columnNull = validateData.check_null(validator, col_check_null)
+            columnNull = validateData.check_null(validator, col_check_null)
+
+            df = spark.read.format("parquet").load(new_version_path)
 
         else:
             pass
@@ -151,11 +184,6 @@ for tblName in tblNames:
             error = ""
             status = "Success"
 
-            # print("Path: ", new_version_path)
-
-            df = spark.read.format("parquet").load(new_version_path)
-            # df.show()
-
             # Set numInserted
             source_row_read = df.count()
 
@@ -168,7 +196,9 @@ for tblName in tblNames:
 
                 else:
                     fact_table = f"fact_{tblName}"
-                    loadHive.save_hive_table(df, dbHiveName, fact_table)
+                    
+                    df.write.partitionBy("OrderDate").mode('overwrite') \
+                            .saveAsTable(f"{dbHiveName}.{fact_table}")
                 
                 numInserted = df.count()
 
@@ -176,12 +206,13 @@ for tblName in tblNames:
             else: # Exists
                 if tblName != "sales":
                     dim_table = f"dim_{tblName}"
-                    transformatiom.merge(spark, df, dbHiveName, dim_table) 
-                                     
+                    transformatiom.merge(spark, df, dbHiveName, dim_table, col_check_null, f) 
+                    print("Check Dim table done")
 
                 else:
                     fact_table = f"fact_{tblName}"
-                    transformatiom.merge(spark, df, dbHiveName, fact_table)
+                    transformatiom.merge(spark, df, dbHiveName, fact_table, col_check_null, f)
+                    print("Check Fact table done")
 
 
                 numInserted = transformatiom.get_insert_count()
