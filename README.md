@@ -112,11 +112,19 @@ Introduce some tools for project:
 
 
 ## 4.3. Data Warehouse
+![image](https://github.com/thanhphat2609/Global_Electronics_Retailer_Hadoop/assets/84914537/cf23a1cb-0538-432b-b9bb-e16138c383d1)
+
+- **Partition Data Warehouse**
+![image](https://github.com/thanhphat2609/Global_Electronics_Retailer_Hadoop/assets/84914537/251e69c5-66f8-41a3-aced-09ca8dbfaa53)
+
+
 
 ## 4.4. Log Pipeline and Data
 ![image](https://github.com/thanhphat2609/Global_Electronics_Retailer_Hadoop/assets/84914537/944322f1-7b5a-44eb-9e39-d130e3a6ae15)
 
 - **Log Pipeline**
+![image](https://github.com/thanhphat2609/Global_Electronics_Retailer_Hadoop/assets/84914537/1de26c13-35be-44a6-b78f-533adf7901f9)
+
 
 - **Log batch**
 ![image](https://github.com/thanhphat2609/Global_Electronics_Retailer_Hadoop/assets/84914537/dc3b655a-9dda-4d1e-8028-8ae17965e171)
