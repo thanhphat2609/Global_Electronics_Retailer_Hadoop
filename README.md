@@ -72,22 +72,29 @@ Introduce some tools for project:
 
 
 - **Pipeline in Airflow**
-![image](https://github.com/thanhphat2609/Global_Electronics_Retailer_Hadoop/assets/84914537/5a98496e-6f5d-4a05-a571-440566131654)
-
+![image](https://github.com/thanhphat2609/Global_Electronics_Retailer_Hadoop/assets/84914537/293e0358-6033-44f3-8f5b-1a100f08af62)
 
 
 - **Python files for Run Spark App**
 
 | **Python Files**          | **Meaning** |
 |-------------------|-------------- |
-| |  |
+| Source_to_Datalake.py | Extract data from MySQL Database to Datalake dir in HDFS |
+| Datalake_to_Datawarehouse.py | Get the last version of datalake and transformation then load to Hive warehouse |
+| PL_Main.py | Define task for Airflow run |
 
 
 - **Modules define by Python**
 
 | **Python Files**          | **Meaning** |
 |-------------------|-------------- |
-| |  |
+| Extraction.py | Class Extraction for extract data |
+| Transformation.py | Class Transformation for check update, insert, transformation data |
+| Load.py | Class Load to load data to table, check exist table in Hive |
+| HadoopEcosystem.py | Class HadoopEcosystem for start service of Hadoop eco |
+| HDFSUtils.py | Class HDFSUtils for HDFS in Hadoop |
+| LogUtils.py | Class LogUtils pipeline and task |
+| Validate.py | Class Validate for check column, null for data before load to warehouse |
 
 
 
@@ -97,8 +104,21 @@ Introduce some tools for project:
 
 ## 4.2. Datalake
 
+![image](https://github.com/thanhphat2609/Global_Electronics_Retailer_Hadoop/assets/84914537/5b0e4e75-01d0-4ce9-9b91-331e39d8e735)
+
+- **Data in datalake**
+![image](https://github.com/thanhphat2609/Global_Electronics_Retailer_Hadoop/assets/84914537/90d6ead7-f8bb-40ad-aef2-f68128e6f106)
+
+
 ## 4.3. Data Warehouse
 
 ## 4.4. Log Data
+![image](https://github.com/thanhphat2609/Global_Electronics_Retailer_Hadoop/assets/84914537/944322f1-7b5a-44eb-9e39-d130e3a6ae15)
+
+- **Log batch**
+![image](https://github.com/thanhphat2609/Global_Electronics_Retailer_Hadoop/assets/84914537/dc3b655a-9dda-4d1e-8028-8ae17965e171)
+
+- **Log data for each batch**
+![image](https://github.com/thanhphat2609/Global_Electronics_Retailer_Hadoop/assets/84914537/c77b288a-2cab-4021-9314-256cb9875da2)
 
 ## 4.5. Superset Report
