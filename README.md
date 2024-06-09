@@ -13,7 +13,7 @@ _Table of contents_
   * [4.1. Pipeline](#41-pipeline)
   * [4.2. Datalake](#42-datalake)
   * [4.3. Data Warehouse](#43-data-warehouse)
-  * [4.4. Log Data](#44-log_data)
+  * [4.4. Log Pipeline and Data](#44-log-pipeline-and-data)
   * [4.5. Superset Report](#45-superset-report)
 
 
@@ -113,8 +113,10 @@ Introduce some tools for project:
 
 ## 4.3. Data Warehouse
 
-## 4.4. Log Data
+## 4.4. Log Pipeline and Data
 ![image](https://github.com/thanhphat2609/Global_Electronics_Retailer_Hadoop/assets/84914537/944322f1-7b5a-44eb-9e39-d130e3a6ae15)
+
+- **Log Pipeline**
 
 - **Log batch**
 ![image](https://github.com/thanhphat2609/Global_Electronics_Retailer_Hadoop/assets/84914537/dc3b655a-9dda-4d1e-8028-8ae17965e171)
