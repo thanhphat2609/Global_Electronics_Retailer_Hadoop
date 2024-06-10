@@ -55,23 +55,40 @@ class Transformation:
         # Read
         df_old = spark.sql(f"SELECT * FROM {db_hive_name}.{tblName}")
 
+        # Check update
+        df_update = self.check_update(df_old, df_new)
+        self.numUpdated = df_update.count()
+
+        df_update.createOrReplaceTempView("tbl_update")
+        df_old.createOrReplaceTempView("tbl_old")
+
+        # Get all columns names except for the ID column
+        update_columns = [col for col in df_update.columns if col != col_key]
+
+        # Construct the UPDATE SQL query
+        update_query = """
+            UPDATE tbl_old
+            SET {}
+            FROM tbl_update
+            WHERE tbl_old.{0} = tbl_update.{0}
+        """.format(col_key, ", ".join(["tbl_old.{0} = tbl_update.{0}".format(col) for col in update_columns]))
+
+        # Update data
+        spark.sql(update_query)
+
         # Get df_insert and numInserted
         df_insert = self.check_insert(df_old, df_new, col_key, f)
         self.numInserted = df_insert.count()
-        
+
         # Insert new data
         if tblName != "fact_sales":
             df_insert.write.partitionBy("year", "month", "day").mode("append").saveAsTable(f"{db_hive_name}.{tblName}")
         else:
             df_insert.write.partitionBy("OrderDate").mode("append").saveAsTable(f"{db_hive_name}.{tblName}")
-
-        # Check update
-        df_update = self.check_update(df_old, df_new)
-        self.numUpdated = df_update.count()
-
-        # Update new data
         
-
+        spark.catalog.dropTempView("tbl_old")
+        spark.catalog.dropTempView("tbl_update")
+        
 
     # Getter method for insert_count
     def get_insert_count(self):
