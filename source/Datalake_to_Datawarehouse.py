@@ -91,6 +91,8 @@ for tblName in tblNames:
         # print("Path: ", new_version_path)
         validator = context.sources.pandas_default.read_parquet(new_version_path)
 
+        # Read data from latest version
+        df = spark.read.format("parquet").load(new_version_path)
         # Check task
             # Task = 6, Customer
         if tblName == "customers":
@@ -102,7 +104,6 @@ for tblName in tblNames:
             columnMissing = validateData.check_schema(validator, col_check_match)
             columnNull = validateData.check_null(validator, col_check_null)
 
-            df = spark.read.format("parquet").load(new_version_path)
 
             # Transformation
             df = df.withColumnRenamed("State Code", "StateCode") \
@@ -117,7 +118,6 @@ for tblName in tblNames:
             columnMissing = validateData.check_schema(validator, col_check_match)
             columnNull = validateData.check_null(validator, col_check_null)
 
-            df = spark.read.format("parquet").load(new_version_path)
 
             df = df.withColumnRenamed("Square Meters", "SquareMeters") \
                    .withColumnRenamed("Open Date", "OpenDate")
@@ -134,8 +134,6 @@ for tblName in tblNames:
             columnNull = validateData.check_null(validator, col_check_null)
 
 
-            df = spark.read.format("parquet").load(new_version_path)
-
             df = df.withColumnRenamed("Product Name", "ProductName") \
                    .withColumnRenamed("Unit Cost USD", "Unit_Cost_USD") \
                    .withColumnRenamed("Unit Price USD", "Unit_Price_USD")
@@ -151,9 +149,6 @@ for tblName in tblNames:
             columnMissing = validateData.check_schema(validator, col_check_match)
             columnNull = validateData.check_null(validator, col_check_null)
 
-            df = spark.read.format("parquet").load(new_version_path)
-
-            # df.show().limit(1)
 
             df = df.withColumnRenamed("Order Number", "OrderNumber") \
                    .withColumnRenamed("Line Item", "LineItem") \
@@ -170,7 +165,6 @@ for tblName in tblNames:
             columnMissing = validateData.check_schema(validator, col_check_match)
             columnNull = validateData.check_null(validator, col_check_null)
 
-            df = spark.read.format("parquet").load(new_version_path)
 
         else:
             pass
