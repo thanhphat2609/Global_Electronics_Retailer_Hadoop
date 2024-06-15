@@ -58,7 +58,7 @@ Introduce some tools for project:
 ![DataSetDiagram](https://github.com/thanhphat2609/Global_Electronics_Retailer_Hadoop/assets/84914537/e34766d2-8b75-4e32-8445-7bc4dcbd610e)
 
 **Data_Dictionary**
-https://docs.google.com/spreadsheets/d/149kBQERsr9I5RbcBwBhVJdaATtK1lOVu/edit?usp=sharing&ouid=104868242064941170355&rtpof=true&sd=true
+[Global_Electronics_Retailer_Data_Dictonary](https://docs.google.com/spreadsheets/d/149kBQERsr9I5RbcBwBhVJdaATtK1lOVu/edit?usp=sharing&ouid=104868242064941170355&rtpof=true&sd=true)
 
 
 ## 3.2. Building HDFS
