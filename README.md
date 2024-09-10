@@ -1,5 +1,7 @@
 # End to End project Global Electronics Retailer Analysis with Hadoop Ecosystem using 2-tier Architecture.
 
+---
+
 _Table of contents_
 - [**1. Hadoop Ecosystem**](#1-hadoop-ecosystem)
 - [**2. Data Architecture**](#2-data-architecture)
@@ -16,6 +18,7 @@ _Table of contents_
   * [4.4. Log Pipeline and Data](#44-log-pipeline-and-data)
   * [4.5. Superset Report](#45-superset-report)
 
+---
 
 # **1. Hadoop Ecosystem**
 ![Hadoop_Ecosystem](https://github.com/thanhphat2609/Global_Electronics_Retailer_Hadoop/assets/84914537/2ca1841c-6829-4402-8363-4d2debfa0f06)
